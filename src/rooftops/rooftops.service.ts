@@ -20,7 +20,10 @@ export class RooftopsService {
     const where: any = {};
 
     if (city) {
-      where.city = city;
+      where.city = {
+        contains: city,
+        mode: 'insensitive',
+      };
     }
 
     if (capacity) {

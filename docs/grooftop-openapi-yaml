@@ -1,617 +1,12 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: Grooftop API
-  description: "Grooftop is the Airbnb of Rooftops. This API allows users to list, search, book, and review rooftop spaces."
+  description: API for managing rooftop rentals
   version: 1.0.0
+
 servers:
-  - url: https://api.grooftop.com
-    description: Production server
-  - url: https://staging-api.grooftop.com
-    description: Staging server
-
-tags:
-  - name: Auth
-    description: Operations related to user registration, login, and account management.
-  - name: Rooftops
-    description: Operations for listing, retrieving, creating, updating, and deleting rooftop listings.
-  - name: Bookings
-    description: Operations for creating and managing rooftop bookings.
-  - name: Reviews
-    description: Operations for creating and managing reviews for rooftops.
-  - name: Users
-    description: Operations for retrieving and updating user profiles.
-
-paths:
-  /auth/register:
-    post:
-      tags:
-        - Auth
-      summary: Register a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserRegistrationRequest'
-      responses:
-        '201':
-          description: User registered successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Bad request, validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /auth/login:
-    post:
-      tags:
-        - Auth
-      summary: Login to an existing account
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
-      responses:
-        '200':
-          description: User logged in successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '401':
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /users/me:
-    get:
-      tags:
-        - Users
-      summary: Retrieve currently authenticated user profile
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: The authenticated user's profile
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    patch:
-      tags:
-        - Users
-      summary: Update currently authenticated user's profile
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserUpdateRequest'
-      responses:
-        '200':
-          description: User updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Bad request, validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /rooftops:
-    get:
-      tags:
-        - Rooftops
-      summary: List all rooftops
-      parameters:
-        - in: query
-          name: city
-          schema:
-            type: string
-          description: Filter by city
-        - in: query
-          name: capacity
-          schema:
-            type: integer
-          description: Filter by minimum capacity
-      responses:
-        '200':
-          description: A list of rooftops
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Rooftop'
-    post:
-      tags:
-        - Rooftops
-      summary: Create a new rooftop
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RooftopCreateRequest'
-      responses:
-        '201':
-          description: Rooftop created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rooftop'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /rooftops/{rooftopId}:
-    get:
-      tags:
-        - Rooftops
-      summary: Retrieve a rooftop by ID
-      parameters:
-        - in: path
-          name: rooftopId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Rooftop retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rooftop'
-        '404':
-          description: Rooftop not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    patch:
-      tags:
-        - Rooftops
-      summary: Update a rooftop by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: rooftopId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RooftopUpdateRequest'
-      responses:
-        '200':
-          description: Rooftop updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Rooftop'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Rooftop not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    delete:
-      tags:
-        - Rooftops
-      summary: Delete a rooftop by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: rooftopId
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Rooftop deleted successfully
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Rooftop not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /rooftops/{rooftopId}/reviews:
-    get:
-      tags:
-        - Reviews
-      summary: List reviews for a specific rooftop
-      parameters:
-        - in: path
-          name: rooftopId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A list of reviews for the rooftop
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Review'
-        '404':
-          description: Rooftop not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    post:
-      tags:
-        - Reviews
-      summary: Create a new review for a rooftop
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: rooftopId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReviewCreateRequest'
-      responses:
-        '201':
-          description: Review created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Review'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Rooftop not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /reviews/{reviewId}:
-    get:
-      tags:
-        - Reviews
-      summary: Retrieve a review by ID
-      parameters:
-        - in: path
-          name: reviewId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Review retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Review'
-        '404':
-          description: Review not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    patch:
-      tags:
-        - Reviews
-      summary: Update a review by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: reviewId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReviewUpdateRequest'
-      responses:
-        '200':
-          description: Review updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Review'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Review not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    delete:
-      tags:
-        - Reviews
-      summary: Delete a review by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: reviewId
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Review deleted successfully
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Review not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /bookings:
-    get:
-      tags:
-        - Bookings
-      summary: List all bookings for the authenticated user
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: query
-          name: rooftopId
-          schema:
-            type: string
-          description: Filter bookings by a specific rooftop
-      responses:
-        '200':
-          description: A list of bookings
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Booking'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    post:
-      tags:
-        - Bookings
-      summary: Create a new booking
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookingCreateRequest'
-      responses:
-        '201':
-          description: Booking created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Booking'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /bookings/{bookingId}:
-    get:
-      tags:
-        - Bookings
-      summary: Retrieve a booking by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: bookingId
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Booking retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Booking'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Booking not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    patch:
-      tags:
-        - Bookings
-      summary: Update a booking by ID (e.g. change the date)
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: bookingId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookingUpdateRequest'
-      responses:
-        '200':
-          description: Booking updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Booking'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Booking not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    delete:
-      tags:
-        - Bookings
-      summary: Cancel a booking by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: bookingId
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Booking canceled successfully
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Booking not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+  - url: http://localhost:3000
+    description: Development server
 
 components:
   securitySchemes:
@@ -621,23 +16,26 @@ components:
       bearerFormat: JWT
 
   schemas:
-    UserRegistrationRequest:
+    RegisterDto:
       type: object
       required:
         - email
-        - password
         - name
+        - password
       properties:
         email:
           type: string
           format: email
-        password:
-          type: string
-          format: password
+          example: john@example.com
         name:
           type: string
+          example: John Doe
+        password:
+          type: string
+          minLength: 8
+          example: password123
 
-    LoginRequest:
+    LoginDto:
       type: object
       required:
         - email
@@ -646,24 +44,24 @@ components:
         email:
           type: string
           format: email
+          example: john@example.com
         password:
           type: string
-          format: password
+          example: password123
 
     AuthResponse:
       type: object
       properties:
-        user:
-          $ref: '#/components/schemas/User'
-        token:
+        accessToken:
           type: string
-          description: "JWT access token"
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-    User:
+    UserProfile:
       type: object
       properties:
         id:
           type: string
+          format: uuid
         email:
           type: string
           format: email
@@ -672,47 +70,23 @@ components:
         avatarUrl:
           type: string
           format: uri
+          nullable: true
         createdAt:
           type: string
           format: date-time
 
-    UserUpdateRequest:
+    UpdateUserDto:
       type: object
       properties:
         name:
           type: string
+          example: John Doe
         avatarUrl:
           type: string
           format: uri
+          example: https://example.com/avatar.jpg
 
-    Rooftop:
-      type: object
-      properties:
-        id:
-          type: string
-        ownerId:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        city:
-          type: string
-        capacity:
-          type: integer
-        pricePerHour:
-          type: number
-          format: float
-        images:
-          type: array
-          items:
-            type: string
-            format: uri
-        createdAt:
-          type: string
-          format: date-time
-
-    RooftopCreateRequest:
+    CreateRooftopDto:
       type: object
       required:
         - title
@@ -720,7 +94,59 @@ components:
         - city
         - capacity
         - pricePerHour
+        - images
       properties:
+        title:
+          type: string
+          example: Sunset Terrace
+        description:
+          type: string
+          example: Beautiful rooftop with amazing sunset views
+        city:
+          type: string
+          example: New York
+        capacity:
+          type: integer
+          minimum: 1
+          example: 20
+        pricePerHour:
+          type: number
+          minimum: 0
+          example: 50.0
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+          example: ['https://example.com/image1.jpg']
+
+    UpdateRooftopDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        city:
+          type: string
+        capacity:
+          type: integer
+          minimum: 1
+        pricePerHour:
+          type: number
+          minimum: 0
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    RooftopResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
         title:
           type: string
         description:
@@ -731,100 +157,22 @@ components:
           type: integer
         pricePerHour:
           type: number
-          format: float
         images:
           type: array
           items:
             type: string
             format: uri
-
-    RooftopUpdateRequest:
-      type: object
-      properties:
-        title:
+        ownerId:
           type: string
-        description:
-          type: string
-        city:
-          type: string
-        capacity:
-          type: integer
-        pricePerHour:
-          type: number
-          format: float
-        images:
-          type: array
-          items:
-            type: string
-            format: uri
-
-    Review:
-      type: object
-      properties:
-        id:
-          type: string
-        rooftopId:
-          type: string
-        userId:
-          type: string
-        rating:
-          type: integer
-          minimum: 1
-          maximum: 5
-        comment:
-          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
-
-    ReviewCreateRequest:
-      type: object
-      required:
-        - rating
-      properties:
-        rating:
-          type: integer
-          minimum: 1
-          maximum: 5
-        comment:
-          type: string
-
-    ReviewUpdateRequest:
-      type: object
-      properties:
-        rating:
-          type: integer
-          minimum: 1
-          maximum: 5
-        comment:
-          type: string
-
-    Booking:
-      type: object
-      properties:
-        id:
-          type: string
-        rooftopId:
-          type: string
-        userId:
-          type: string
-        startTime:
-          type: string
-          format: date-time
-        endTime:
-          type: string
-          format: date-time
-        totalPrice:
-          type: number
-          format: float
-        status:
-          type: string
-          enum: [pending, confirmed, canceled]
-        createdAt:
+        updatedAt:
           type: string
           format: date-time
 
-    BookingCreateRequest:
+    CreateBookingDto:
       type: object
       required:
         - rooftopId
@@ -833,6 +181,20 @@ components:
       properties:
         rooftopId:
           type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        startTime:
+          type: string
+          format: date-time
+          example: '2024-01-20T14:00:00Z'
+        endTime:
+          type: string
+          format: date-time
+          example: '2024-01-20T18:00:00Z'
+
+    UpdateBookingDto:
+      type: object
+      properties:
         startTime:
           type: string
           format: date-time
@@ -840,9 +202,18 @@ components:
           type: string
           format: date-time
 
-    BookingUpdateRequest:
+    BookingResponse:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+        rooftopId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
         startTime:
           type: string
           format: date-time
@@ -851,13 +222,530 @@ components:
           format: date-time
         status:
           type: string
-          enum: [pending, confirmed, canceled]
+          enum: [PENDING, CONFIRMED, CANCELLED]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-    Error:
+    CreateReviewDto:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          example: Great rooftop with amazing views!
+
+    UpdateReviewDto:
       type: object
       properties:
-        message:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
           type: string
 
-security:
-  - bearerAuth: []
+    ReviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        rooftopId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+        comment:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request, validation error
+        '409':
+          description: Email already registered
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login to an existing account
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Returns the current user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+
+    patch:
+      tags:
+        - Users
+      summary: Update current user profile
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+  /rooftops:
+    post:
+      tags:
+        - Rooftops
+      summary: Create a new rooftop
+      operationId: createRooftop
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRooftopDto'
+      responses:
+        '201':
+          description: Rooftop created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RooftopResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+    get:
+      tags:
+        - Rooftops
+      summary: List all rooftops
+      operationId: listRooftops
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+          required: false
+          description: Filter rooftops by city
+        - name: capacity
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+          description: Filter rooftops by minimum capacity
+      responses:
+        '200':
+          description: Returns list of rooftops
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopResponse'
+
+  /rooftops/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Rooftops
+      summary: Get a rooftop by ID
+      operationId: getRooftop
+      responses:
+        '200':
+          description: Returns the rooftop
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RooftopResponse'
+        '404':
+          description: Rooftop not found
+
+    patch:
+      tags:
+        - Rooftops
+      summary: Update a rooftop
+      operationId: updateRooftop
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRooftopDto'
+      responses:
+        '200':
+          description: Rooftop updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RooftopResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Rooftop not found
+
+    delete:
+      tags:
+        - Rooftops
+      summary: Delete a rooftop
+      operationId: deleteRooftop
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Rooftop deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Rooftop not found
+
+  /rooftops/{rooftopId}/reviews:
+    parameters:
+      - name: rooftopId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - Reviews
+      summary: Create a new review
+      operationId: createReview
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewDto'
+      responses:
+        '201':
+          description: Review created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Rooftop not found
+
+    get:
+      tags:
+        - Reviews
+      summary: List reviews for a rooftop
+      operationId: listReviews
+      responses:
+        '200':
+          description: Returns list of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewResponse'
+        '404':
+          description: Rooftop not found
+
+  /rooftops/{rooftopId}/reviews/{id}:
+    parameters:
+      - name: rooftopId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Reviews
+      summary: Get a review by ID
+      operationId: getReview
+      responses:
+        '200':
+          description: Returns the review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '404':
+          description: Review not found
+
+    patch:
+      tags:
+        - Reviews
+      summary: Update a review
+      operationId: updateReview
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewDto'
+      responses:
+        '200':
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Review not found
+
+    delete:
+      tags:
+        - Reviews
+      summary: Delete a review
+      operationId: deleteReview
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Review deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Review not found
+
+  /bookings:
+    post:
+      tags:
+        - Bookings
+      summary: Create a new booking
+      operationId: createBooking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingDto'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Rooftop not found
+
+    get:
+      tags:
+        - Bookings
+      summary: List all bookings for the authenticated user
+      operationId: listBookings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: rooftopId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          required: false
+          description: Filter bookings by rooftop ID
+      responses:
+        '200':
+          description: Returns list of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingResponse'
+        '401':
+          description: Unauthorized
+
+  /bookings/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Bookings
+      summary: Get a booking by ID
+      operationId: getBooking
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Returns the booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Booking not found
+
+    patch:
+      tags:
+        - Bookings
+      summary: Update a booking
+      operationId: updateBooking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingDto'
+      responses:
+        '200':
+          description: Booking updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Booking not found
+
+    delete:
+      tags:
+        - Bookings
+      summary: Cancel a booking
+      operationId: cancelBooking
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Booking canceled successfully
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Booking not found
