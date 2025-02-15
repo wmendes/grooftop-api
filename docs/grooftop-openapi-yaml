@@ -74,6 +74,12 @@ components:
         createdAt:
           type: string
           format: date-time
+        phone:
+          type: string
+          example: "+5511999999999"
+        refreshToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
     UpdateUserDto:
       type: object
@@ -92,8 +98,13 @@ components:
         - title
         - description
         - city
+        - state
+        - postalCode
+        - address
         - capacity
+        - maxGuests
         - pricePerHour
+        - privacyLevel
         - images
       properties:
         title:
@@ -105,20 +116,94 @@ components:
         city:
           type: string
           example: New York
-        capacity:
-          type: integer
-          minimum: 1
-          example: 20
-        pricePerHour:
+        state:
+          type: string
+          example: "São Paulo"
+        postalCode:
+          type: string
+          example: "12345-678"
+        address:
+          type: string
+          example: "Rua Example, 123"
+        additionalInfo:
+          type: string
+          example: "Entrada pela garagem"
+        pricePerPeriod:
           type: number
           minimum: 0
-          example: 50.0
+          example: 500.0
+        privacyLevel:
+          type: string
+          enum: [PRIVATE, SHARED, CORPORATE]
+          example: "PRIVATE"
+        availableActivities:
+          type: array
+          items:
+            type: string
+            format: uuid
+        availableRentalTypes:
+          type: array
+          items:
+            type: string
+            format: uuid
+        maxGuests:
+          type: integer
+          minimum: 1
+          example: 50
+        hasPark:
+          type: boolean
+          example: true
+        maxCarsOnPark:
+          type: integer
+          nullable: true
+          example: 10
+        hasNearbyPark:
+          type: boolean
+          example: true
+        availableAccessibilityInfrastructure:
+          type: array
+          items:
+            type: string
+            format: uuid
+        videos:
+          type: array
+          items:
+            type: string
+            format: uri
+          example: ['https://example.com/video1.mp4']
+        tags:
+          type: array
+          items:
+            type: string
+          example: ['luxury', 'sea-view', 'pet-friendly']
+        features:
+          type: array
+          items:
+            type: string
+            format: uuid
+        facilities:
+          type: array
+          items:
+            type: string
+            format: uuid
+        viewTypes:
+          type: array
+          items:
+            type: string
+            format: uuid
+        guidelines:
+          type: array
+          items:
+            type: string
+            format: uuid
+        cancellationPolicy:
+          type: string
+          format: uuid
         images:
           type: array
           items:
             type: string
             format: uri
-          example: ['https://example.com/image1.jpg']
 
     UpdateRooftopDto:
       type: object
@@ -129,12 +214,73 @@ components:
           type: string
         city:
           type: string
-        capacity:
-          type: integer
-          minimum: 1
-        pricePerHour:
+        state:
+          type: string
+        postalCode:
+          type: string
+        address:
+          type: string
+        additionalInfo:
+          type: string
+        pricePerPeriod:
           type: number
-          minimum: 0
+        privacyLevel:
+          type: string
+        availableActivities:
+          type: array
+          items:
+            type: string
+            format: uuid
+        availableRentalTypes:
+          type: array
+          items:
+            type: string
+            format: uuid
+        maxGuests:
+          type: integer
+        hasPark:
+          type: boolean
+        maxCarsOnPark:
+          type: integer
+        hasNearbyPark:
+          type: boolean
+        availableAccessibilityInfrastructure:
+          type: array
+          items:
+            type: string
+            format: uuid
+        videos:
+          type: array
+          items:
+            type: string
+            format: uri
+        tags:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            type: string
+            format: uuid
+        facilities:
+          type: array
+          items:
+            type: string
+            format: uuid
+        viewTypes:
+          type: array
+          items:
+            type: string
+            format: uuid
+        guidelines:
+          type: array
+          items:
+            type: string
+            format: uuid
+        cancellationPolicy:
+          type: string
+          format: uuid
         images:
           type: array
           items:
@@ -153,18 +299,66 @@ components:
           type: string
         city:
           type: string
-        capacity:
-          type: integer
-        pricePerHour:
+        state:
+          type: string
+        postalCode:
+          type: string
+        address:
+          type: string
+        additionalInfo:
+          type: string
+        pricePerPeriod:
           type: number
-        images:
+        privacyLevel:
+          type: string
+          enum: [PRIVATE, SHARED, CORPORATE]
+        availableActivities:
+          type: array
+          items:
+            $ref: '#/components/schemas/RooftopActivity'
+        availableRentalTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalType'
+        maxGuests:
+          type: integer
+        hasPark:
+          type: boolean
+        maxCarsOnPark:
+          type: integer
+        hasNearbyPark:
+          type: boolean
+        availableAccessibilityInfrastructure:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessibilityInfra'
+        videos:
           type: array
           items:
             type: string
             format: uri
-        ownerId:
-          type: string
-          format: uuid
+        tags:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/RooftopFeature'
+        facilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/RooftopFacility'
+        viewTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RooftopViewType'
+        guidelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/RooftopGuideline'
+        cancellationPolicy:
+          $ref: '#/components/schemas/CancellationPolicy'
         createdAt:
           type: string
           format: date-time
@@ -276,6 +470,80 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    RooftopActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    RentalType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    AccessibilityInfra:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    RooftopFeature:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    RooftopFacility:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    RooftopViewType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    RooftopGuideline:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        guideline:
+          type: string
+
+    CancellationPolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        policyName:
+          type: string
+        description:
+          type: string
 
 paths:
   /auth/register:
@@ -405,13 +673,59 @@ paths:
             type: string
           required: false
           description: Filter rooftops by city
-        - name: capacity
+        - name: state
+          in: query
+          schema:
+            type: string
+          required: false
+          description: Filter rooftops by state
+        - name: maxGuests
           in: query
           schema:
             type: integer
             minimum: 1
           required: false
           description: Filter rooftops by minimum capacity
+        - name: activities
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          required: false
+          description: Filter rooftops by activities
+        - name: features
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          required: false
+          description: Filter rooftops by features
+        - name: facilities
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          required: false
+          description: Filter rooftops by facilities
+        - name: privacyLevel
+          in: query
+          schema:
+            type: string
+            enum: [PRIVATE, SHARED, CORPORATE]
+          required: false
+          description: Filter rooftops by privacy level
+        - name: hasPark
+          in: query
+          schema:
+            type: boolean
+          required: false
+          description: Filter rooftops by parking availability
       responses:
         '200':
           description: Returns list of rooftops
@@ -749,3 +1063,131 @@ paths:
           description: Forbidden
         '404':
           description: Booking not found
+
+  /metadata/activities:
+    get:
+      tags:
+        - Metadata
+      summary: List all rooftop activities
+      operationId: listActivities
+      responses:
+        '200':
+          description: Returns list of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopActivity'
+
+  /metadata/rental-types:
+    get:
+      tags:
+        - Metadata
+      summary: List all rental types
+      operationId: listRentalTypes
+      responses:
+        '200':
+          description: Returns list of rental types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RentalType'
+
+  /metadata/accessibility:
+    get:
+      tags:
+        - Metadata
+      summary: List all accessibility infrastructure options
+      operationId: listAccessibilityInfra
+      responses:
+        '200':
+          description: Returns list of accessibility infrastructure
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessibilityInfra'
+
+  /metadata/features:
+    get:
+      tags:
+        - Metadata
+      summary: List all rooftop features
+      operationId: listFeatures
+      responses:
+        '200':
+          description: Returns list of features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopFeature'
+
+  /metadata/facilities:
+    get:
+      tags:
+        - Metadata
+      summary: List all rooftop facilities
+      operationId: listFacilities
+      responses:
+        '200':
+          description: Returns list of facilities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopFacility'
+
+  /metadata/view-types:
+    get:
+      tags:
+        - Metadata
+      summary: List all view types
+      operationId: listViewTypes
+      responses:
+        '200':
+          description: Returns list of view types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopViewType'
+
+  /metadata/guidelines:
+    get:
+      tags:
+        - Metadata
+      summary: List all rooftop guidelines
+      operationId: listGuidelines
+      responses:
+        '200':
+          description: Returns list of guidelines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RooftopGuideline'
+
+  /metadata/cancellation-policies:
+    get:
+      tags:
+        - Metadata
+      summary: List all cancellation policies
+      operationId: listCancellationPolicies
+      responses:
+        '200':
+          description: Returns list of cancellation policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CancellationPolicy'

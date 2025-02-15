@@ -8,6 +8,7 @@ import { RooftopsModule } from './rooftops/rooftops.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AppController } from './app.controller';
+import { MetadataModule } from './metadata/metadata.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AppController } from './app.controller';
     RooftopsModule,
     BookingsModule,
     ReviewsModule,
+    MetadataModule,
   ],
   controllers: [AppController],
 })

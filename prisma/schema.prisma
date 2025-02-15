@@ -36,6 +36,16 @@ model Rooftop {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
+  activities                    RooftopActivity[]      @relation("RooftopToActivity")
+  rentalTypes                  RentalType[]           @relation("RooftopToRentalType")
+  accessibilityInfrastructure  AccessibilityInfra[]   @relation("RooftopToAccessibility")
+  features                     RooftopFeature[]       @relation("RooftopToFeature")
+  facilities                   RooftopFacility[]      @relation("RooftopToFacility")
+  viewTypes                    RooftopViewType[]      @relation("RooftopToViewType")
+  guidelines                   RooftopGuideline[]     @relation("RooftopToGuideline")
+  cancellationPolicy          CancellationPolicy?    @relation(fields: [cancellationPolicyId], references: [id])
+  cancellationPolicyId        String?
+
   // Relations
   owner     User      @relation(fields: [ownerId], references: [id])
   ownerId   String
@@ -71,6 +81,71 @@ model Review {
   userId    String
   rooftop   Rooftop @relation(fields: [rooftopId], references: [id])
   rooftopId String
+}
+
+model RooftopActivity {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToActivity")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model RentalType {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToRentalType")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model AccessibilityInfra {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToAccessibility")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model RooftopFeature {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToFeature")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model RooftopFacility {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToFacility")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model RooftopViewType {
+  id        String     @id @default(uuid())
+  name      String
+  rooftops  Rooftop[]  @relation("RooftopToViewType")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model RooftopGuideline {
+  id         String     @id @default(uuid())
+  guideline  String
+  rooftops   Rooftop[]  @relation("RooftopToGuideline")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model CancellationPolicy {
+  id          String     @id @default(uuid())
+  policyName  String
+  description String?
+  rooftops    Rooftop[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 enum BookingStatus {
