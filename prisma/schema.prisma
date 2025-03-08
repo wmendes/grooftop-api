@@ -33,10 +33,12 @@ model Rooftop {
   updatedAt                   DateTime             @updatedAt
   ownerId                     String
   cancellationPolicyId        String?
+  privacyPolicyId             String?
   bookings                    Booking[]
   bookmarks                   Bookmark[]
   reviews                     Review[]
   cancellationPolicy          CancellationPolicy?  @relation(fields: [cancellationPolicyId], references: [id])
+  privacyPolicy               PrivacyPolicy?       @relation(fields: [privacyPolicyId], references: [id])
   owner                       User                 @relation(fields: [ownerId], references: [id])
   accessibilityInfrastructure AccessibilityInfra[] @relation("RooftopToAccessibility")
   activities                  RooftopActivity[]    @relation("RooftopToActivity")
@@ -71,15 +73,6 @@ model Review {
   rooftopId String
   rooftop   Rooftop  @relation(fields: [rooftopId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
-}
-
-
-model PrivacyPolicy {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  rooftops  Rooftop[] @relation("RooftopToActivity")
 }
 
 model RooftopActivity {
@@ -148,6 +141,14 @@ model CancellationPolicy {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   rooftops    Rooftop[]
+}
+
+model PrivacyPolicy {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[]
 }
 
 model Bookmark {
