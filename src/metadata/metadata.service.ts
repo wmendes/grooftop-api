@@ -9,6 +9,10 @@ export class MetadataService {
     return this.prisma.rooftopActivity.findMany();
   }
 
+  async listPrivacyPolicies() {
+    return this.prisma.privacyPolicy.findMany();
+  }
+
   async listRentalTypes() {
     return this.prisma.rentalType.findMany();
   }
