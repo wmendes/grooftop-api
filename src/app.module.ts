@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { RooftopsModule } from './rooftops/rooftops.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { AppController } from './app.controller';
 import { MetadataModule } from './metadata/metadata.module';
 
@@ -25,6 +26,7 @@ import { MetadataModule } from './metadata/metadata.module';
     RooftopsModule,
     BookingsModule,
     ReviewsModule,
+    BookmarksModule,
     MetadataModule,
   ],
   controllers: [AppController],

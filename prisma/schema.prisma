@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,145 +8,150 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   password  String
   name      String
   avatarUrl String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  // Relations
-  rooftops Rooftop[]
-  bookings Booking[]
-  reviews  Review[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  bookings  Booking[]
+  bookmarks Bookmark[]
+  reviews   Review[]
+  rooftops  Rooftop[]
 }
 
 model Rooftop {
-  id           String    @id @default(uuid())
-  title        String
-  description  String
-  city         String
-  capacity     Int
-  pricePerHour Float
-  images       String[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  activities                    RooftopActivity[]      @relation("RooftopToActivity")
-  rentalTypes                  RentalType[]           @relation("RooftopToRentalType")
-  accessibilityInfrastructure  AccessibilityInfra[]   @relation("RooftopToAccessibility")
-  features                     RooftopFeature[]       @relation("RooftopToFeature")
-  facilities                   RooftopFacility[]      @relation("RooftopToFacility")
-  viewTypes                    RooftopViewType[]      @relation("RooftopToViewType")
-  guidelines                   RooftopGuideline[]     @relation("RooftopToGuideline")
-  cancellationPolicy          CancellationPolicy?    @relation(fields: [cancellationPolicyId], references: [id])
+  id                          String               @id @default(uuid())
+  title                       String
+  description                 String
+  city                        String
+  capacity                    Int
+  pricePerHour                Float
+  images                      String[]
+  createdAt                   DateTime             @default(now())
+  updatedAt                   DateTime             @updatedAt
+  ownerId                     String
   cancellationPolicyId        String?
-
-  // Relations
-  owner     User      @relation(fields: [ownerId], references: [id])
-  ownerId   String
-  bookings  Booking[]
-  reviews   Review[]
+  bookings                    Booking[]
+  bookmarks                   Bookmark[]
+  reviews                     Review[]
+  cancellationPolicy          CancellationPolicy?  @relation(fields: [cancellationPolicyId], references: [id])
+  owner                       User                 @relation(fields: [ownerId], references: [id])
+  accessibilityInfrastructure AccessibilityInfra[] @relation("RooftopToAccessibility")
+  activities                  RooftopActivity[]    @relation("RooftopToActivity")
+  facilities                  RooftopFacility[]    @relation("RooftopToFacility")
+  features                    RooftopFeature[]     @relation("RooftopToFeature")
+  guidelines                  RooftopGuideline[]   @relation("RooftopToGuideline")
+  rentalTypes                 RentalType[]         @relation("RooftopToRentalType")
+  viewTypes                   RooftopViewType[]    @relation("RooftopToViewType")
 }
 
 model Booking {
-  id         String    @id @default(uuid())
+  id         String        @id @default(uuid())
   startTime  DateTime
   endTime    DateTime
   totalPrice Float
   status     BookingStatus @default(PENDING)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  // Relations
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  rooftop   Rooftop @relation(fields: [rooftopId], references: [id])
-  rooftopId String
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  userId     String
+  rooftopId  String
+  rooftop    Rooftop       @relation(fields: [rooftopId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
 }
 
 model Review {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   rating    Int
   comment   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  // Relations
-  user      User    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   userId    String
-  rooftop   Rooftop @relation(fields: [rooftopId], references: [id])
   rooftopId String
+  rooftop   Rooftop  @relation(fields: [rooftopId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model RooftopActivity {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToActivity")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToActivity")
 }
 
 model RentalType {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToRentalType")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToRentalType")
 }
 
 model AccessibilityInfra {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToAccessibility")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToAccessibility")
 }
 
 model RooftopFeature {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToFeature")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToFeature")
 }
 
 model RooftopFacility {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToFacility")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToFacility")
 }
 
 model RooftopViewType {
-  id        String     @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  rooftops  Rooftop[]  @relation("RooftopToViewType")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToViewType")
 }
 
 model RooftopGuideline {
-  id         String     @id @default(uuid())
-  guideline  String
-  rooftops   Rooftop[]  @relation("RooftopToGuideline")
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id        String    @id @default(uuid())
+  guideline String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[] @relation("RooftopToGuideline")
 }
 
 model CancellationPolicy {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   policyName  String
   description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   rooftops    Rooftop[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  rooftopId String
+  rooftop   Rooftop  @relation(fields: [rooftopId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, rooftopId])
 }
 
 enum BookingStatus {
   PENDING
   CONFIRMED
   CANCELED
-} 
+}
