@@ -33,10 +33,12 @@ model Rooftop {
   updatedAt                   DateTime             @updatedAt
   ownerId                     String
   cancellationPolicyId        String?
+  privacyPolicyId             String?
   bookings                    Booking[]
   bookmarks                   Bookmark[]
   reviews                     Review[]
   cancellationPolicy          CancellationPolicy?  @relation(fields: [cancellationPolicyId], references: [id])
+  privacyPolicy               PrivacyPolicy?       @relation(fields: [privacyPolicyId], references: [id])
   owner                       User                 @relation(fields: [ownerId], references: [id])
   accessibilityInfrastructure AccessibilityInfra[] @relation("RooftopToAccessibility")
   activities                  RooftopActivity[]    @relation("RooftopToActivity")
@@ -82,11 +84,12 @@ model RooftopActivity {
 }
 
 model RentalType {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  rooftops  Rooftop[] @relation("RooftopToRentalType")
+  id         String     @id @default(uuid())
+  name       String
+  valueField Boolean
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  rooftops   Rooftop[]  @relation("RooftopToRentalType")
 }
 
 model AccessibilityInfra {
@@ -98,11 +101,13 @@ model AccessibilityInfra {
 }
 
 model RooftopFeature {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  rooftops  Rooftop[] @relation("RooftopToFeature")
+  id            String    @id @default(uuid())
+  name          String
+  valueField    Boolean
+  category      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  rooftops      Rooftop[] @relation("RooftopToFeature")
 }
 
 model RooftopFacility {
@@ -136,6 +141,14 @@ model CancellationPolicy {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   rooftops    Rooftop[]
+}
+
+model PrivacyPolicy {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  rooftops  Rooftop[]
 }
 
 model Bookmark {

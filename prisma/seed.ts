@@ -121,6 +121,225 @@ async function cleanDatabase() {
   
   console.log('Database cleaned successfully');
 }
+const samplePrivacyPoliciesMetadata = [
+  {
+    name: 'Commercial'
+  },
+  {
+    name: 'Private'
+  },
+  {
+    name: 'Public space'
+  }
+]
+
+const sampleActivitiesMetadata = [
+  {
+    name: 'Visitation'
+  },
+  {
+    name: 'Events'
+  },
+  {
+    name: 'Custom event'
+  },
+  {
+    name: 'Photoshoot or a film set'
+  },
+  {
+    name: 'Birthday party'
+  },
+  {
+    name: 'Music'
+  },
+  {
+    name: 'Event'
+  },
+  {
+    name: 'Theater'
+  },
+  {
+    name: 'Pop-up store'
+  },
+  {
+    name: 'Conference'
+  },
+  {
+    name: 'Religious event'
+  }
+]
+
+const sampleRentalTypesMetadata = [
+  {
+    id: 'asbdoasihdoasdoasdas',
+    name: 'Free',
+    valueField: false,
+  },
+  {
+    id: 'asbdoasihdoasdoasdasas',
+    name: 'Hourly',
+    valueField: true,
+  },
+  {
+    id: 'asadsadasasasdasdasdas',
+    name: 'By period',
+    valueField: true,
+  }
+]
+
+const sampleFeaturesMetadata = [
+  {
+    id: 'bsijbaiudhoasda',
+    name: 'Max number of guests',
+    valueField: true,
+    category: 'guests',
+  },
+  {
+    id: 'bsijbaiudhosadasasdas',
+    name: 'Has parking',
+    category: 'parking',
+    valueField: false
+  },
+  {
+    id: 'bsijbaiudhosadasasdasasdas',
+    name: 'Nearby parking',
+    category: 'parking',
+    valueField: false
+  },
+  {
+    id: 'bsij341asdasasdas',
+    name: 'Max number of spots',
+    category: 'parking',
+    valueField: true,
+  },
+  {
+    id: 'nasidoabodasdboai',
+    name: 'Bar',
+    category: 'service',
+    valueField: false
+  },
+  {
+    id: 'nasidoabdasd34odasdboai',
+    name: 'Restaurant',
+    category: 'service',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Coffee shop',
+    category: 'service',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Pool',
+    category: 'facilities',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Shower',
+    category: 'facilities',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Jacuzzi',
+    category: 'facilities',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Air conditioning',
+    category: 'facilities',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Skyline',
+    category: 'view_types',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Lake',
+    category: 'view_types',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'River',
+    category: 'view_types',
+    valueField: false
+  },
+  {
+    id: 'nasidoabsadasodasdboai',
+    name: 'Beach',
+    category: 'view_types',
+    valueField: false
+  },
+]
+
+const sampleAccessibilityInfraMetadata = [
+  {
+    id: 'aoishdaiodhasyiuasbd',
+    name: 'Wheelchair access'
+  },
+  {
+    id: 'aoishdaiodhasyiuasbd',
+    name: 'Accessible restroom'
+  },
+  {
+    id: 'isahdas89daisudasd',
+    name: 'Wide aisles for easy movement'
+  },
+  {
+    id: 'isahdas89sdasdsadaisudasd',
+    name: 'Braille signs'
+  },
+  {
+    id: 'isahdas89daisudasd',
+    name: 'Visual/sound indicators'
+  },
+  {
+    id: 'asodisahodhasdaasda',
+    name: 'Reserved seating'
+  }
+]
+
+const sampleGuidelinesMetadata = [
+  {
+    id: 'saodihasodasd',
+    guideline: 'Alcohol allowed'
+  },
+  {
+    id: 'saodihasodasdsaasd',
+    guideline: 'No outside alcohol'
+  },
+  {
+    id: 'saodihasodasdsaasd',
+    guideline: 'No smoking indoors'
+  },
+  {
+    id: 'saodihasodasdsaas123123',
+    guideline: 'Live events allowed'
+  },
+  {
+    id: 'saodihasodasdsaas123123',
+    guideline: 'No loud noise'
+  }
+]
+
+const sampleCancellationPoliciesMetadata = [
+  {
+    id: 'aoidjasoidjsaodaso',
+    policyName: 'No refund'
+  },
+  {
+    id: 'aoidjasoidjsaodaso',
+    policyName: 'Refundable'
+  }
+]
 
 async function main() {
   console.log('Starting seeding...');
@@ -139,7 +358,6 @@ async function main() {
       password: hashedPassword,
     },
   });
-
   console.log('Created test user:', user.email);
 
   // Create additional users for reviews
@@ -182,6 +400,64 @@ async function main() {
       });
       console.log(`Created review for ${rooftop.title} by ${reviewer.name}: ${review.rating} stars`);
     }
+  }
+
+  // Create metadata
+  for (const privacyPolicy of samplePrivacyPoliciesMetadata) {
+    const metadata = await prisma.privacyPolicy.create({
+      data: privacyPolicy,
+    });
+
+    console.log('Created privacy policy:', metadata.name);
+  }
+
+  for (const activity of sampleActivitiesMetadata) {
+    const metadata = await prisma.rooftopActivity.create({
+      data: activity,
+    });
+
+    console.log('Created activity:', metadata.name);
+  }
+
+  for (const rentalType of sampleRentalTypesMetadata) {
+    const metadata = await prisma.rentalType.create({
+      data: rentalType,
+    });
+
+    console.log('Created rental type:', metadata.name);
+  }
+
+  for (const feature of sampleFeaturesMetadata) {
+    const metadata = await prisma.rooftopFeature.create({
+      data: feature,
+    });
+
+    console.log('Created feature:', metadata.name);
+  }
+
+  for (const accessibilityInfra of sampleAccessibilityInfraMetadata) {
+    const metadata = await prisma.accessibilityInfra.create({
+      data: accessibilityInfra,
+    });
+
+    console.log('Created accessibility infra:', metadata.name);
+  }
+
+  for (const cancellationPolicy of sampleCancellationPoliciesMetadata) {
+    const metadata = await prisma.cancellationPolicy.create({
+      data: cancellationPolicy,
+    });
+
+    console.log('Created cancellation policy:', metadata.policyName);
+  }
+
+  for (const guideline of sampleGuidelinesMetadata) {
+    const metadata = await prisma.rooftopGuideline.create({
+      data: guideline,
+    });
+
+    console.log('Created guideline:', metadata.guideline);
+    
   }
 
   console.log('Seeding finished.');
