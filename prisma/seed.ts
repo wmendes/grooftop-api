@@ -61,8 +61,72 @@ const sampleRooftops = [
   },
 ];
 
+// Sample reviews data
+const sampleReviews = [
+  {
+    rating: 5,
+    comment: "Absolutely stunning views! The space was perfect for our anniversary dinner. Highly recommend for special occasions.",
+  },
+  {
+    rating: 4,
+    comment: "Great location and amenities. Staff was very helpful. Only giving 4 stars because it was a bit windy that day.",
+  },
+  {
+    rating: 5,
+    comment: "Perfect venue for our corporate event. Everyone was impressed with the views and setup.",
+  },
+  {
+    rating: 4,
+    comment: "Beautiful space with excellent facilities. The sunset view was breathtaking.",
+  },
+  {
+    rating: 3,
+    comment: "Nice place but a bit overpriced for what you get. The staff was friendly though.",
+  },
+];
+
+/**
+ * Clean the database by deleting all records from all tables
+ * in the correct order to respect foreign key constraints
+ */
+async function cleanDatabase() {
+  console.log('Cleaning database...');
+  
+  // Delete in reverse order of dependencies
+  await prisma.review.deleteMany({});
+  console.log('Deleted all reviews');
+  
+  await prisma.booking.deleteMany({});
+  console.log('Deleted all bookings');
+  
+  await prisma.bookmark.deleteMany({});
+  console.log('Deleted all bookmarks');
+  
+  await prisma.rooftop.deleteMany({});
+  console.log('Deleted all rooftops');
+  
+  await prisma.user.deleteMany({});
+  console.log('Deleted all users');
+  
+  // Delete reference tables if needed
+  await prisma.rooftopActivity.deleteMany({});
+  await prisma.rentalType.deleteMany({});
+  await prisma.accessibilityInfra.deleteMany({});
+  await prisma.rooftopFeature.deleteMany({});
+  await prisma.rooftopFacility.deleteMany({});
+  await prisma.rooftopViewType.deleteMany({});
+  await prisma.rooftopGuideline.deleteMany({});
+  await prisma.cancellationPolicy.deleteMany({});
+  console.log('Deleted all reference data');
+  
+  console.log('Database cleaned successfully');
+}
+
 async function main() {
   console.log('Starting seeding...');
+  
+  // Clean the database before seeding
+  await cleanDatabase();
 
   // Create test user
   const hashedPassword = await bcrypt.hash('password123', 10);
@@ -78,6 +142,22 @@ async function main() {
 
   console.log('Created test user:', user.email);
 
+  // Create additional users for reviews
+  const reviewers = [];
+  for (let i = 1; i <= 3; i++) {
+    const reviewer = await prisma.user.upsert({
+      where: { email: `reviewer${i}@example.com` },
+      update: {},
+      create: {
+        email: `reviewer${i}@example.com`,
+        name: `Reviewer ${i}`,
+        password: hashedPassword,
+      },
+    });
+    reviewers.push(reviewer);
+    console.log('Created reviewer:', reviewer.email);
+  }
+
   // Create rooftops
   for (const rooftopData of sampleRooftops) {
     const rooftop = await prisma.rooftop.create({
@@ -87,6 +167,21 @@ async function main() {
       },
     });
     console.log('Created rooftop:', rooftop.title);
+    
+    // Add reviews for each rooftop
+    for (let i = 0; i < Math.min(3, sampleReviews.length); i++) {
+      const reviewData = sampleReviews[i];
+      const reviewer = reviewers[i % reviewers.length];
+      
+      const review = await prisma.review.create({
+        data: {
+          ...reviewData,
+          userId: reviewer.id,
+          rooftopId: rooftop.id,
+        },
+      });
+      console.log(`Created review for ${rooftop.title} by ${reviewer.name}: ${review.rating} stars`);
+    }
   }
 
   console.log('Seeding finished.');
