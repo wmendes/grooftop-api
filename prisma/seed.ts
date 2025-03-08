@@ -92,34 +92,40 @@ const sampleReviews = [
 async function cleanDatabase() {
   console.log('Cleaning database...');
   
-  // Delete in reverse order of dependencies
-  await prisma.review.deleteMany({});
-  console.log('Deleted all reviews');
-  
-  await prisma.booking.deleteMany({});
-  console.log('Deleted all bookings');
-  
-  await prisma.bookmark.deleteMany({});
-  console.log('Deleted all bookmarks');
-  
-  await prisma.rooftop.deleteMany({});
-  console.log('Deleted all rooftops');
-  
-  await prisma.user.deleteMany({});
-  console.log('Deleted all users');
-  
-  // Delete reference tables if needed
-  await prisma.rooftopActivity.deleteMany({});
-  await prisma.rentalType.deleteMany({});
-  await prisma.accessibilityInfra.deleteMany({});
-  await prisma.rooftopFeature.deleteMany({});
-  await prisma.rooftopFacility.deleteMany({});
-  await prisma.rooftopViewType.deleteMany({});
-  await prisma.rooftopGuideline.deleteMany({});
-  await prisma.cancellationPolicy.deleteMany({});
-  console.log('Deleted all reference data');
-  
-  console.log('Database cleaned successfully');
+  try {
+    // Delete in reverse order of dependencies
+    await prisma.review.deleteMany({});
+    console.log('Deleted all reviews');
+    
+    await prisma.booking.deleteMany({});
+    console.log('Deleted all bookings');
+    
+    await prisma.bookmark.deleteMany({});
+    console.log('Deleted all bookmarks');
+    
+    await prisma.rooftop.deleteMany({});
+    console.log('Deleted all rooftops');
+    
+    await prisma.user.deleteMany({});
+    console.log('Deleted all users');
+    
+    // Delete all metadata tables
+    await prisma.privacyPolicy.deleteMany({});
+    await prisma.rooftopActivity.deleteMany({});
+    await prisma.rentalType.deleteMany({});
+    await prisma.accessibilityInfra.deleteMany({});
+    await prisma.rooftopFeature.deleteMany({});
+    await prisma.rooftopFacility.deleteMany({});
+    await prisma.rooftopViewType.deleteMany({});
+    await prisma.rooftopGuideline.deleteMany({});
+    await prisma.cancellationPolicy.deleteMany({});
+    console.log('Deleted all reference data');
+    
+    console.log('Database cleaned successfully');
+  } catch (error) {
+    console.error('Error during database cleanup:', error);
+    throw error;
+  }
 }
 const samplePrivacyPoliciesMetadata = [
   {
@@ -189,91 +195,91 @@ const sampleRentalTypesMetadata = [
 
 const sampleFeaturesMetadata = [
   {
-    id: 'bsijbaiudhoasda',
+    id: 'feature_max_guests',
     name: 'Max number of guests',
     valueField: true,
     category: 'guests',
   },
   {
-    id: 'bsijbaiudhosadasasdas',
+    id: 'feature_has_parking',
     name: 'Has parking',
     category: 'parking',
     valueField: false
   },
   {
-    id: 'bsijbaiudhosadasasdasasdas',
+    id: 'feature_nearby_parking',
     name: 'Nearby parking',
     category: 'parking',
     valueField: false
   },
   {
-    id: 'bsij341asdasasdas',
+    id: 'feature_max_parking_spots',
     name: 'Max number of spots',
     category: 'parking',
     valueField: true,
   },
   {
-    id: 'nasidoabodasdboai',
+    id: 'feature_bar',
     name: 'Bar',
     category: 'service',
     valueField: false
   },
   {
-    id: 'nasidoabdasd34odasdboai',
+    id: 'feature_restaurant',
     name: 'Restaurant',
     category: 'service',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_coffee_shop',
     name: 'Coffee shop',
     category: 'service',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_pool',
     name: 'Pool',
     category: 'facilities',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_shower',
     name: 'Shower',
     category: 'facilities',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_jacuzzi',
     name: 'Jacuzzi',
     category: 'facilities',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_air_conditioning',
     name: 'Air conditioning',
     category: 'facilities',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_view_skyline',
     name: 'Skyline',
     category: 'view_types',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_view_lake',
     name: 'Lake',
     category: 'view_types',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_view_river',
     name: 'River',
     category: 'view_types',
     valueField: false
   },
   {
-    id: 'nasidoabsadasodasdboai',
+    id: 'feature_view_beach',
     name: 'Beach',
     category: 'view_types',
     valueField: false
@@ -282,61 +288,61 @@ const sampleFeaturesMetadata = [
 
 const sampleAccessibilityInfraMetadata = [
   {
-    id: 'aoishdaiodhasyiuasbd',
+    id: 'accessibility_wheelchair',
     name: 'Wheelchair access'
   },
   {
-    id: 'aoishdaiodhasyiuasbd',
+    id: 'accessibility_restroom',
     name: 'Accessible restroom'
   },
   {
-    id: 'isahdas89daisudasd',
+    id: 'accessibility_wide_aisles',
     name: 'Wide aisles for easy movement'
   },
   {
-    id: 'isahdas89sdasdsadaisudasd',
+    id: 'accessibility_braille',
     name: 'Braille signs'
   },
   {
-    id: 'isahdas89daisudasd',
+    id: 'accessibility_indicators',
     name: 'Visual/sound indicators'
   },
   {
-    id: 'asodisahodhasdaasda',
+    id: 'accessibility_seating',
     name: 'Reserved seating'
   }
 ]
 
 const sampleGuidelinesMetadata = [
   {
-    id: 'saodihasodasd',
+    id: 'guideline_alcohol_allowed',
     guideline: 'Alcohol allowed'
   },
   {
-    id: 'saodihasodasdsaasd',
+    id: 'guideline_no_outside_alcohol',
     guideline: 'No outside alcohol'
   },
   {
-    id: 'saodihasodasdsaasd',
+    id: 'guideline_no_smoking',
     guideline: 'No smoking indoors'
   },
   {
-    id: 'saodihasodasdsaas123123',
+    id: 'guideline_live_events',
     guideline: 'Live events allowed'
   },
   {
-    id: 'saodihasodasdsaas123123',
+    id: 'guideline_no_loud_noise',
     guideline: 'No loud noise'
   }
 ]
 
 const sampleCancellationPoliciesMetadata = [
   {
-    id: 'aoidjasoidjsaodaso',
+    id: 'cancellation_no_refund',
     policyName: 'No refund'
   },
   {
-    id: 'aoidjasoidjsaodaso',
+    id: 'cancellation_refundable',
     policyName: 'Refundable'
   }
 ]
