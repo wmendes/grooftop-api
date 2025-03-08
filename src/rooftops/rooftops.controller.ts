@@ -44,6 +44,44 @@ export class RooftopsController {
     return this.rooftopsService.findAll(city, capacity);
   }
 
+  @Get('nearby')
+  @ApiOperation({ summary: 'Get nearby rooftops based on location' })
+  @ApiQuery({ name: 'latitude', required: true })
+  @ApiQuery({ name: 'longitude', required: true })
+  @ApiQuery({ name: 'radius', required: false })
+  @ApiResponse({ status: 200, description: 'Returns list of nearby rooftops' })
+  findNearby(
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+    @Query('radius') radius?: number,
+  ) {
+    return this.rooftopsService.findNearby(latitude, longitude, radius);
+  }
+
+  @Get('popular')
+  @ApiOperation({ summary: 'Get popular rooftops' })
+  @ApiResponse({ status: 200, description: 'Returns list of popular rooftops' })
+  findPopular() {
+    return this.rooftopsService.findPopular();
+  }
+
+  @Get('trending')
+  @ApiOperation({ summary: 'Get trending rooftops' })
+  @ApiResponse({ status: 200, description: 'Returns list of trending rooftops' })
+  findTrending() {
+    return this.rooftopsService.findTrending();
+  }
+
+  @Get('recommended')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get recommended rooftops for the current user' })
+  @ApiResponse({ status: 200, description: 'Returns list of recommended rooftops' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  findRecommended(@CurrentUser() user: any) {
+    return this.rooftopsService.findRecommended(user.id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a rooftop by ID' })
   @ApiResponse({ status: 200, description: 'Returns the rooftop' })
