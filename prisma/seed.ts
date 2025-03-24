@@ -119,6 +119,7 @@ async function cleanDatabase() {
     await prisma.rooftopViewType.deleteMany({});
     await prisma.rooftopGuideline.deleteMany({});
     await prisma.cancellationPolicy.deleteMany({});
+    await prisma.rooftopExperienceType.deleteMany({});
     console.log('Deleted all reference data');
     
     console.log('Database cleaned successfully');
@@ -127,6 +128,7 @@ async function cleanDatabase() {
     throw error;
   }
 }
+
 const samplePrivacyPoliciesMetadata = [
   {
     name: 'Commercial'
@@ -347,6 +349,29 @@ const sampleCancellationPoliciesMetadata = [
   }
 ]
 
+const sampleRooftopExperienceTypes = [
+  {
+    id: 'experience_cultural',
+    name: 'Cultural Rooftop',
+    image: 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?ixlib=rb-4.0.3'
+  },
+  {
+    id: 'experience_club_event',
+    name: 'Club or Event Venue Rooftop',
+    image: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-4.0.3'
+  },
+  {
+    id: 'experience_green',
+    name: 'Green Rooftop',
+    image: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3'
+  },
+  {
+    id: 'experience_gastronomic',
+    name: 'Gastronomic Rooftop',
+    image: 'https://images.unsplash.com/photo-1615719413546-198b25453f85?ixlib=rb-4.0.3'
+  }
+]
+
 async function main() {
   console.log('Starting seeding...');
   
@@ -464,6 +489,14 @@ async function main() {
 
     console.log('Created guideline:', metadata.guideline);
     
+  }
+
+  for (const experience of sampleRooftopExperienceTypes) {
+    await prisma.rooftopExperienceType.create({
+      data: experience
+    })
+
+    console.log('Created experience:', experience.name);
   }
 
   console.log('Seeding finished.');
