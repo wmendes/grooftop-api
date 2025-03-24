@@ -168,3 +168,9 @@ enum BookingStatus {
   CONFIRMED
   CANCELED
 }
+
+model RooftopExperienceType {
+  id        String   @id @default(uuid())
+  name      String
+  image     String
+}

@@ -40,4 +40,8 @@ export class MetadataService {
   async listCancellationPolicies() {
     return this.prisma.cancellationPolicy.findMany();
   }
+
+  async listExperienceTypes() {
+    return this.prisma.rooftopExperienceType.findMany();
+  }
 } 
