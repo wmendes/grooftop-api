@@ -13,6 +13,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN npm run build
+
 # Copy the rest of your code
 COPY . .
 
@@ -26,4 +28,4 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Default command (start your app in production mode)
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:prod"]
