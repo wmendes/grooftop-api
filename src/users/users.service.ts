@@ -15,6 +15,7 @@ export class UsersService {
         name: true,
         avatarUrl: true,
         createdAt: true,
+        rooftops: true,
       },
     });
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 
 export class CreateRooftopDto {
   @ApiProperty({ example: 'Sunset Terrace' })
@@ -31,4 +31,58 @@ export class CreateRooftopDto {
   @IsArray()
   @IsString({ each: true })
   images: string[];
+
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', required: false })
+  @IsString()
+  @IsUUID()
+  @IsOptional()
+  cancellationPolicyId?: string;
+
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', required: false })
+  @IsString()
+  @IsUUID()
+  @IsOptional()
+  privacyPolicyId?: string;
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  accessibilityInfrastructureIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  activityIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  facilityIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  featureIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  guidelineIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  rentalTypeIds?: string[];
+
+  @ApiProperty({ example: ['123e4567-e89b-12d3-a456-426614174000'], required: false })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  viewTypeIds?: string[];
 } 

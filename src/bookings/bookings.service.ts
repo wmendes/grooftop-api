@@ -116,6 +116,7 @@ export class BookingsService {
             title: true,
             city: true,
             pricePerHour: true,
+            images: true,
             owner: {
               select: {
                 name: true,
