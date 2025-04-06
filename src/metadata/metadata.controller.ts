@@ -69,4 +69,11 @@ export class MetadataController {
   listCancellationPolicies() {
     return this.metadataService.listCancellationPolicies();
   }
+
+  @Get('experience-types')
+  @ApiOperation({ summary: 'List all experience types' })
+  @ApiResponse({ status: 200, description: 'Returns list of experience types' })
+  listExperienceTypes() {
+    return this.metadataService.listExperienceTypes();
+  }
 } 
