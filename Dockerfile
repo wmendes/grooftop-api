@@ -13,10 +13,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-RUN npm run build
 
 # Copy the rest of your code
 COPY . .
+
+RUN npm run build
 
 # (Optional) If you have a build step (e.g., TypeScript -> JavaScript)
 # RUN npm run build
