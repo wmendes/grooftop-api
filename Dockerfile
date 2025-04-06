@@ -28,4 +28,4 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Default command (start your app in production mode)
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
