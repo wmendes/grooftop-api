@@ -163,14 +163,14 @@ model Bookmark {
   @@unique([userId, rooftopId])
 }
 
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELED
-}
-
 model RooftopExperienceType {
   id        String   @id @default(uuid())
   name      String
   image     String
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
 }

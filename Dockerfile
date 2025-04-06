@@ -25,6 +25,8 @@ RUN npm run build
 # Generate Prisma client (required if you use Prisma)
 RUN npx prisma generate
 
+RUN npx prisma migrate deploy
+
 # Expose the port your app runs on
 EXPOSE 3000
 
