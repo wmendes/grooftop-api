@@ -13,20 +13,26 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-
 # Copy the rest of your code
 COPY . .
 
+# Build the application
 RUN npm run build
-
-# (Optional) If you have a build step (e.g., TypeScript -> JavaScript)
-# RUN npm run build
 
 # Generate Prisma client (required if you use Prisma)
 RUN npx prisma generate
 
+# Create a startup script
+RUN echo '#!/bin/sh\n\
+echo "Waiting for database to be ready..."\n\
+sleep 15\n\
+echo "Running database migrations..."\n\
+npx prisma migrate deploy\n\
+echo "Starting the application..."\n\
+npm run start:prod' > /app/start.sh && chmod +x /app/start.sh
+
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Default command (start your app in production mode)
-CMD ["npm", "run", "start:prod"]
+# Use the startup script as the entrypoint
+CMD ["/app/start.sh"]
