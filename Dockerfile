@@ -22,14 +22,8 @@ RUN npm run build
 # Generate Prisma client (required if you use Prisma)
 RUN npx prisma generate
 
-# Create a startup script
-RUN echo '#!/bin/sh\n\
-echo "Waiting for database to be ready..."\n\
-sleep 15\n\
-echo "Running database migrations..."\n\
-npx prisma migrate deploy\n\
-echo "Starting the application..."\n\
-npm run start:prod' > /app/start.sh && chmod +x /app/start.sh
+# Make the start script executable
+RUN chmod +x /app/start.sh
 
 # Expose the port your app runs on
 EXPOSE 3000
